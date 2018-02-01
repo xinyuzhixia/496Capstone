@@ -13,6 +13,7 @@
 #include <opencv2/highgui/highgui.hpp>
 #include <opencv2/imgproc/imgproc.hpp>
 #include <opencv2/video/background_segm.hpp>
+#include <opencv2/bgsegm.hpp>
 #include <opencv2/objdetect.hpp>
 #include <opencv2/tracking.hpp>
 #include <opencv2/core/ocl.hpp>
@@ -24,16 +25,17 @@ using namespace std;
 
 class MotionDetector {
   
-    int m_ID;
     Ptr<BackgroundSubtractor> m_bg;
+    int detected;
     
 public:
-    MotionDetector(int val);
+    MotionDetector();
     ~MotionDetector();
     void BackgroundSubstraction(Mat &frame, Mat &foreground);
-    int MotionDetecting(Mat frame1, Mat frame2, Mat &ThresholdImage);
-    bool TrackingMovement(Mat ThresholdImage, Mat &CameraFrame);
-    
+    void BackgroundSubstraction_new(Mat &frame, Mat &foregroundImg, Mat &foregroundMask);
+    void MotionDetecting(Mat frame1, Mat frame2, Mat &ThresholdImage);
+    bool TrackingMovement(Mat ThresholdImage, Mat &CameraFrame, double &max_area);
+    int Getdetected(){return detected;}
     
     
 };
