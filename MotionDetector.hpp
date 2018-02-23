@@ -32,10 +32,14 @@ public:
     MotionDetector();
     ~MotionDetector();
     void BackgroundSubstraction(Mat &frame, Mat &foreground);
-    void BackgroundSubstraction_new(Mat &frame, Mat &foregroundImg, Mat &foregroundMask);
+    bool BackgroundSubstraction_new(Mat &frame, Mat &foregroundImg, Mat &foregroundMask);
     void MotionDetecting(Mat frame1, Mat frame2, Mat &ThresholdImage);
     bool TrackingMovement(Mat ThresholdImage, Mat &CameraFrame, double &max_area);
+    bool TrackingMovement_withDB(Mat ThresholdImage, Mat &CameraFrame, double &max_area);
     int Getdetected(){return detected;}
+    
+private:
+   // vector<>FindClusterPointer();
     
     
 };

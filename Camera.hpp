@@ -26,16 +26,9 @@
 using namespace cv;
 using namespace std;
 
-enum CStatus{
-    OFF,
-    RUNNING,
-    ON
-};
-
 class Camera{
   
     int m_CID;
-    CStatus m_CStatus;
     string m_URL;
     bool m_FoundPeople;
     Ptr<MotionDetector> m_MDetector;
@@ -45,7 +38,6 @@ public:
     
     Camera(int val, string addr){
         m_CID = val;
-        m_CStatus = OFF;
         m_URL = addr;
         m_FoundPeople = false;
         m_MDetector = new MotionDetector();
@@ -54,14 +46,9 @@ public:
     ~Camera();
     
     int GetCameraID(){return m_CID;}
-    CStatus GetCameraStatus(){return m_CStatus;}
-    bool GetFoundPeople(){return m_FoundPeople;}
-    void SetCameraStatus(CStatus status) {m_CStatus = status;}
-    
-    bool TurnCameraOn();
-    bool TurnCameraOff();
-    
-    int RunOccupancyDetection();
+    bool GetOccupancyStatus(){return m_FoundPeople;}
+    bool AdjustCameraAngle(int command);
+    int RunOccupancyDetection(int Processtime, bool Display);
     int DisplayVideo();
     
 };

@@ -28,7 +28,7 @@ public:
     PeopleDetector();
     ~PeopleDetector();
     int GetNumofpeople();
-    bool PeopleDetecting( Mat frame );
+    bool PeopleDetecting( Mat &frame );
 };
 
 

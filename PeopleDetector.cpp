@@ -17,9 +17,13 @@
 using namespace cv;
 using namespace std;
 
-const static string DEFAULTCLASSIFIER = "/Users/DaQunZi/Downloads/HS.xml";
+const static string DEFAULTCLASSIFIER = "/Users/Yuhan/Documents/opencv/project/test/HS.xml";
 
 PeopleDetector::PeopleDetector(){
+    if (!m_Cascade.load(DEFAULTCLASSIFIER)){
+        cout << "XML file load error!" << endl;
+    }
+    
     m_numofpeople = 0;
 }
 
@@ -30,14 +34,10 @@ int PeopleDetector::GetNumofpeople(){
     return m_numofpeople;
 }
 
-bool PeopleDetector::PeopleDetecting( Mat frame ){
-   
-    if (!m_Cascade.load(DEFAULTCLASSIFIER)){
-        cout << "load error!" << endl;
-        return -1;
-    }
-
-    string window_name = "Test_Face";
+bool PeopleDetector::PeopleDetecting( Mat &frame ){
+    //cout << "invoke people " << endl;
+    putText(frame, " Running People Detector ! ", cvPoint(30,50), FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(200,200,250), 1, CV_AA);
+    
     std::vector<Rect> faces;
     Mat frame_gray;
     
@@ -45,7 +45,7 @@ bool PeopleDetector::PeopleDetecting( Mat frame ){
     equalizeHist( frame_gray, frame_gray );
     
     //-- Detect faces
-    m_Cascade.detectMultiScale( frame_gray, faces, 1.1, 2, 0|CV_HAAR_SCALE_IMAGE, Size(30, 30) );
+    m_Cascade.detectMultiScale( frame_gray, faces, 1.1, 2, 0|CV_HAAR_SCALE_IMAGE, Size(100, 100) );
    
     for( size_t i = 0; i < faces.size(); i++ )
     {
@@ -56,8 +56,8 @@ bool PeopleDetector::PeopleDetecting( Mat frame ){
     
     
     //-- Show what you got
-    imshow( window_name, frame );
-    waitKey(10);
+    //imshow( window_name, frame );
+    //waitKey(10);
     if (faces.size() > 0){
         return true;
     }
