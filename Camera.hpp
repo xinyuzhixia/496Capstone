@@ -22,6 +22,7 @@
 
 #include "MotionDetector.hpp"
 #include "PeopleDetector.hpp"
+#include "Pedestrian.h"
 
 using namespace cv;
 using namespace std;
@@ -31,6 +32,7 @@ class Camera{
     int m_CID;
     string m_URL;
     bool m_FoundPeople;
+    int m_PeopleCount;
     Ptr<MotionDetector> m_MDetector;
     Ptr<PeopleDetector> m_PDetector;
     
@@ -40,6 +42,7 @@ public:
         m_CID = val;
         m_URL = addr;
         m_FoundPeople = false;
+        m_PeopleCount = 0;
         m_MDetector = new MotionDetector();
         m_PDetector = new PeopleDetector();
     }
@@ -47,6 +50,7 @@ public:
     
     int GetCameraID(){return m_CID;}
     bool GetOccupancyStatus(){return m_FoundPeople;}
+    int GetPeopleCount(){return m_PeopleCount;}
     bool AdjustCameraAngle(int command);
     int RunOccupancyDetection(int Processtime, bool Display);
     int DisplayVideo();

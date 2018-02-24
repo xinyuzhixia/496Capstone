@@ -10,6 +10,8 @@
 #define PeopleDetector_hpp
 
 #include <stdio.h>
+#include <opencv2/dnn.hpp>
+#include <opencv2/dnn/all_layers.hpp>
 #include <opencv2/core/core.hpp>
 #include <opencv2/opencv.hpp>
 #include <opencv2/highgui/highgui.hpp>
@@ -19,17 +21,18 @@
 
 using namespace cv;
 using namespace std;
-
+using namespace dnn;
 class PeopleDetector{
-    
-    int m_numofpeople;
+
     CascadeClassifier m_Cascade;
+    Net net;
 public:
     PeopleDetector();
     ~PeopleDetector();
-    int GetNumofpeople();
     bool PeopleDetecting( Mat &frame );
+    int DnnDetector(Mat &frame);
 };
 
+void Hog_detectAndDraw(const HOGDescriptor &hog, Mat &img);
 
 #endif /* PeopleDetector_hpp */

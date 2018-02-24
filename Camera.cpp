@@ -9,15 +9,12 @@
 #include <unistd.h>
 #include "Camera.hpp"
 
+
 Camera::~Camera(){
     
 }
 bool Camera::AdjustCameraAngle(int rotate){
    
-    // rotate
-    //http://192.168.0.101:15156/decoder_control.cgi?loginuse=admin\\&loginpas=1234\\&command=1\\&onestep=0
-    //http://192.168.0.18:15156/videostream.cgi?loginuse=admin&loginpas=1234
-    
     string addr = m_URL;
     size_t pos = addr.find("videostream.cgi?");
     size_t username_pos = addr.find("loginuse=");
@@ -59,56 +56,40 @@ int Camera::RunOccupancyDetection(int Processtime, bool Display ){
     time_t end, timeTaken;
     time_t start = time(0);
     
-    int count_people = 0;
-    int count_frame = 0;
-    int count_motion = 0;
-    
-    
     while(timeLeft > 0){
        
         Mat frame1, ThresholdImage;
         // Capture frame-by-frame
         cap >> frame1;
+        
         if (frame1.empty()) break;
-         count_frame ++;
+       
         // do motion detection first
         Mat foregroundImg;
         Mat foregroundMask;
         
        if (m_MDetector->BackgroundSubstraction_new(frame1, foregroundImg, foregroundMask)){
-           count_motion ++;
+           //count_motion ++;
             // display
            if (Display){
                putText(frame1, " Detected Motion ! ", cvPoint(30,30),
                        FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(200,200,250), 1, CV_AA);}
+
+            m_PeopleCount = m_PDetector->DnnDetector(frame1);
+           if(m_PeopleCount > 0) m_FoundPeople = true;
+           else m_FoundPeople = false;
            
-           //Frame_interval --;
-           
-           if(count_motion == 30){
-               
-               if (m_PDetector->PeopleDetecting(frame1)){
-                   // display
-                   if (Display){
-                       putText(frame1, " Detected People ! ", cvPoint(30,70),
-                               FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(200,200,250), 1, CV_AA);}
-                   
-                   m_FoundPeople = true;
-               }
-               
-               Frame_interval = 30;
-               count_motion = 0;
-           }
+            if (Display){
+                putText(frame1, " Detected " + to_string(m_PeopleCount) + " People ! ", cvPoint(30,70),
+                        FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(200,200,250), 1, CV_AA);
+            }
            
        }else{
-           count_motion = 0;
            if(Display){
-           putText(foregroundImg, " Does not detect Motion ! ", cvPoint(30,30),
+           putText(frame1, " Does not detect Motion ! ", cvPoint(30,30),
                    FONT_HERSHEY_COMPLEX_SMALL, 0.8, cvScalar(200,200,250), 1, CV_AA);}
-           
            m_FoundPeople = false;
        }
-        //cout << "Found people: " << m_FoundPeople << endl;
-        
         if(Display){
             
             imshow("foreground mask", frame1);
@@ -127,7 +108,6 @@ int Camera::RunOccupancyDetection(int Processtime, bool Display ){
     cap.release();
 
     return 0;
-    
 }
 
 
