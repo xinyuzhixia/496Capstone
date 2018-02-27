@@ -1,0 +1,6 @@
+<RCC>
+    <qresource prefix="/">
+        <file>user.txt</file>
+        <file>admin.txt</file>
+    </qresource>
+</RCC>
